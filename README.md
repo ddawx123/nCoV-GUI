@@ -3,9 +3,10 @@
 基于iViewUI构造 数据接口通过Python爬虫计划任务实现
 
 国际用户项目演示地址:
-内地线路：https://dwz.cn/NWDFtNQB
-香港线路：http://dscitech.hkg03.bdysite.com/2019nCoV/
-全球线路：http://global.dingstudio.cn/nCoV-GUI/index.html
+
+- 内地线路：https://dwz.cn/NWDFtNQB
+- 香港线路：http://dscitech.hkg03.bdysite.com/2019nCoV/
+- 全球线路：http://global.dingstudio.cn/nCoV-GUI/index.html
 
 This project is build for Vue.js 2 + vue-router + webpack2 + View UI (iView) 4, just install and run.
 
