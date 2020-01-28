@@ -6,7 +6,7 @@
 
 - 内地线路：https://dwz.cn/NWDFtNQB
 - 香港线路：http://dscitech.hkg03.bdysite.com/2019nCoV/
-- 全球线路：http://global.dingstudio.cn/nCoV-GUI/index.html
+- 全球线路：http://global.dingstudio.cn/nCoV-GUI/
 
 This project is build for Vue.js 2 + vue-router + webpack2 + View UI (iView) 4, just install and run.
 
