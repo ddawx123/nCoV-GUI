@@ -41,8 +41,10 @@
                 </h1>
                 <h2>
                     <p>2019新型冠状病毒实况监控中心</p>
-                    <Button @click="handleMonitor" type="warning" shape="circle" ghost>进入发展势态表</Button>
-                    <Button @click="handleEvent" type="info" shape="circle" ghost>进入事件跟踪表</Button>
+                    <Button @click="handleMonitor" type="warning" shape="circle" ghost>进入发展势态表》</Button>
+                    <Button @click="handleEvent" type="info" shape="circle" ghost>进入事件跟踪表》</Button>
+                    <Button @click="handleVideo" type="error" shape="circle" ghost>武汉此时此刻（医院施工现场实时画面）</Button>
+                    <Button @click="handleTg" type="primary" shape="circle">电报信息实况</Button>
                 </h2>
                 <h5>叮云科技数据墙 提供技术支持</h5>
             </Col>
@@ -54,12 +56,22 @@
         methods: {
             handleMonitor () {
                 this.$router.push({
-                    path:'/screen'
+                    path: '/screen'
                 })
             },
             handleEvent () {
                 this.$router.push({
-                    path:'/event'
+                    path: '/event'
+                })
+            },
+            handleVideo () {
+                this.$router.push({
+                    path: '/cctv-live-video'
+                })
+            },
+            handleTg () {
+                this.$router.push({
+                    path: '/tg-channel'
                 })
             }
         }

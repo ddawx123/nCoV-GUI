@@ -21,6 +21,20 @@ const routers = [
         component: (resolve) => require(['./views/event.vue'], resolve)
     },
     {
+        path: '/cctv-live-video',
+        meta: {
+            title: '武汉此时此刻'
+        },
+        component: (resolve) => require(['./views/video-live.vue'], resolve)
+    },
+    {
+        path: '/tg-channel',
+        meta: {
+            title: 'TG电报实时信息——nCoV2019'
+        },
+        component: (resolve) => require(['./views/telegram.vue'], resolve)
+    },
+    {
         path: '*',
         meta: {
             title: ''
