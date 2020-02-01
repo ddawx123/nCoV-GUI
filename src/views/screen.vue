@@ -1,62 +1,54 @@
 <style lang="less">
-    .index {
-        background-color: #363636;
-        color: #ffffff;
+    .screen {
         width: 100%;
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         text-align: center;
-        h1{
-            height: 150px;
-            text-align: center;
-            img{
-                height: 100%;
-            }
-        }
-        h2{
-            color: #ffffff;
-            margin-bottom: 10px;
-            text-align: center;
-            p{
-                margin: 0 0 50px;
-            }
-        }
-        h5{
-            color: #ffffff;
-            margin-bottom: 10px;
-            text-align: center;
-            p{
-                margin: 0 0 50px;
-            }
-        }
-        .ivu-row-flex{
-            height: 100%;
-        }
-        .ivu-table .table-dark {
-            background-color: #363636;
-            color: #ffffff;
-        }
-        .ivu-table .table-warn-cell-confirm {
-            background-color: #291d1d;
-            color: #ff6600;
-        }
-        .ivu-table .table-tip-cell-confirm {
-            background-color: #2e281a;
-            color: #ffee00;
-        }
-        .ivu-table .table-heal-cell-confirm {
-            background-color: #2e281a;
-            color: #00ff00;
-        }
     }
 </style>
 <template>
-    <div class="index">
-        <h2><a href="javascript:;" @click="handleStart">新型冠状病毒（2019-nCoV）发展势态数据实况监控中心</a></h2>
-        <Table :columns="columns_ncov" :data="data_ncov" :loading="loading"></Table>
-        <h5>叮云科技数据墙 提供技术支持</h5>
+    <div class="screen">
+        <h2 style="text-align: center">新型冠状病毒（2019-nCoV）发展势态数据实况监控中心</h2>
+        <Divider dashed />
+        <Alert style="font-size: 10px; padding: unset" type="error">中国疫情实况</Alert>
+        <Row>
+            <Alert style="float: left; font-size: 10px; padding: unset; width: 25%" type="error">确诊{{chinaTotal.confirm}}例</Alert>
+            <Alert style="float: left; font-size: 10px; padding: unset; width: 25%" type="warning">疑似{{chinaTotal.suspect}}例</Alert>
+            <Alert style="float: left; font-size: 10px; padding: unset; width: 25%" type="success">治愈{{chinaTotal.heal}}例</Alert>
+            <Alert style="float: left; font-size: 10px; padding: unset; width: 25%">死亡{{chinaTotal.dead}}例</Alert>
+        </Row>
+        <Row>
+            <Col span="8">
+                <Select v-model="countrySelected" filterable @on-change="pullCountryDetail">
+                    <Option v-for="(v,k,i) in globalData" :value="k" :key="i">{{ v.name }}</Option>
+                </Select>
+            </Col>
+            <Col span="8">
+                <Select v-model="provinceSelected" filterable multiple @on-change="pullProvinceDetail">
+                    <Option v-for="(v,k,i) in provinceData" :value="k" :key="i">{{ v.name }}</Option>
+                </Select>
+            </Col>
+            <Col span="8">
+                <Select v-model="citySelected" filterable multiple @on-change="pullCityDetail">
+                    <Option v-for="(v,k,i) in cityData" :value="v.name" :key="i">{{ v.name }}</Option>
+                </Select>
+            </Col>
+        </Row>
+        <Divider dashed />
+        <Row>
+            <Col v-for="(v,k,i) in nCoV_Cards" :key="i" span="8">
+                <Card>
+                    <p slot="title">{{ v.name }} 实时疫情信息</p>
+                    <p>累计确诊：<span style="color: #f00; font-size: 18px; font-weight: bold">{{ v.total.confirm }}</span>例 较昨日新增：<span style="color: #f00; font-size: 18px; font-weight: bold">{{ v.total.confirm - (v.total.confirm - v.today.confirm) }}</span>例</p>
+                    <p>已治愈：<span style="color: #0b0; font-size: 18px; font-weight: bold">{{ v.total.heal }}</span>例 死亡：<span style="color: #00f; font-size: 18px; font-weight: bold">{{ v.total.dead }}</span>例</p>
+                </Card>
+            </Col>
+        </Row>
+        <!--<Table :columns="columns_ncov" :data="data_ncov" :loading="loading"></Table>-->
+        <Divider />
+        <h5 style="text-align: center">叮云科技数据墙 提供技术支持</h5>
     </div>
 </template>
 <script>
@@ -66,166 +58,30 @@
                 loading: false,
                 columns_ncov: [
                     {
-                        title: '国家',
-                        key: 'country',
-                        filters: [
-                            {
-                                label: '中国',
-                                value: '中国'
-                            },
-                            {
-                                label: '美国',
-                                value: '美国'
-                            },
-                            {
-                                label: '日本',
-                                value: '日本'
-                            },
-                            {
-                                label: '法国',
-                                value: '法国'
-                            },
-                            {
-                                label: '澳大利亚',
-                                value: '澳大利亚'
-                            },
-                            {
-                                label: '新加坡',
-                                value: '新加坡'
-                            },
-                            {
-                                label: '韩国',
-                                value: '韩国'
-                            },
-                            {
-                                label: '越南',
-                                value: '越南'
-                            },
-                            {
-                                label: '马来西亚',
-                                value: '马来西亚'
-                            },
-                            {
-                                label: '德国',
-                                value: '德国'
-                            }
-                        ],
-                        filterMethod (value, row) {
-                            return row.country.indexOf(value) > -1;
-                        },
-                        ellipsis: true,
-                        tooltip: true
-                    },
-                    {
-                        title: '地区',
-                        key: 'area',
-                        filters: [
-                            {
-                                label: '湖北',
-                                value: '湖北'
-                            },
-                            {
-                                label: '浙江',
-                                value: '浙江'
-                            },
-                            {
-                                label: '广东',
-                                value: '广东'
-                            },
-                            {
-                                label: '上海',
-                                value: '上海'
-                            },
-                            {
-                                label: '北京',
-                                value: '北京'
-                            }
-                        ],
-                        filterMethod (value, row) {
-                            return row.area.indexOf(value) > -1;
-                        },
-                        ellipsis: true,
-                        tooltip: true
-                    },
-                    {
-                        title: '城市',
-                        key: 'city',
-                        filters: [
-                            {
-                                label: '武汉',
-                                value: '武汉'
-                            },
-                            {
-                                label: '杭州',
-                                value: '杭州'
-                            },
-                            {
-                                label: '绍兴',
-                                value: '绍兴'
-                            },
-                            {
-                                label: '宁波',
-                                value: '宁波'
-                            },
-                            {
-                                label: '温州',
-                                value: '温州'
-                            },
-                            {
-                                label: '嘉兴',
-                                value: '嘉兴'
-                            },
-                            {
-                                label: '直辖市外地输入',
-                                value: '外地'
-                            },
-                            {
-                                label: '深圳',
-                                value: '深圳'
-                            },
-                            {
-                                label: '广州',
-                                value: '广州'
-                            }
-                        ],
-                        filterMethod (value, row) {
-                            return row.city.indexOf(value) > -1;
-                        },
-                        ellipsis: true,
-                        tooltip: true
-                    },
-                    {
                         title: '确诊',
-                        key: 'confirm',
-                        sortable: true,
-                        sortType: 'desc',
-                        ellipsis: true,
-                        tooltip: true
+                        key: 'confirm'
                     },
                     {
                         title: '死亡',
-                        key: 'dead',
-                        sortable: true,
-                        ellipsis: true,
-                        tooltip: true
+                        key: 'dead'
                     },
                     {
                         title: '疑似',
-                        key: 'suspect',
-                        sortable: true,
-                        ellipsis: true,
-                        tooltip: true
+                        key: 'suspect'
                     },
                     {
                         title: '康复',
-                        key: 'heal',
-                        sortable: true,
-                        ellipsis: true,
-                        tooltip: true
+                        key: 'heal'
                     }
                 ],
-                data_ncov: [
-                ]
+                countrySelected: null,
+                provinceSelected: null,
+                citySelected: null,
+                chinaTotal: {},
+                globalData: [],
+                provinceData: [],
+                cityData: [],
+                nCoV_Cards: []
             }
         },
         mounted () {
@@ -238,7 +94,8 @@
                 if (xhr.readyState == 4) {
                     try {
                         var data = JSON.parse(xhr.responseText);
-                        that.$data.data_ncov = data;
+                        that.$data.globalData = data.areaTree;
+                        that.$data.chinaTotal = data.chinaTotal;
                         that.$data.loading = false;
                     } catch (e) {
                         that.$data.loading = false;
@@ -253,33 +110,53 @@
         },
         methods: {
             handleStart () {
-                this.$data.data_ncov = [];
-                var that = this;
-                this.$Modal.confirm({
-                    title: '数据重载提示',
-                    content: '视图已被清空，是否重新拉取最新数据。',
-                    closeable: false,
-                    onOk: () => {
-                        that.$data.loading = true;
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('GET', 'https://2019ncov.blend.gateway.asia-guangdong.api.dscitech.com/', true);
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState == 4) {
-                                try {
-                                    var data = JSON.parse(xhr.responseText);
-                                    that.$data.data_ncov = data;
-                                    that.$data.loading = false;
-                                } catch (e) {
-                                    that.$data.loading = false;
-                                    that.$Modal.warning({
-                                        title: '【系统异常】糟糕，翻车了',
-                                        content: e.message
-                                    })
-                                }
-                            }
-                        }
-                        xhr.send();
-                    }
+                console.log('no implement')
+            },
+            pullCountryDetail () { //全球数据抽取
+                if (this.$data.globalData[this.countrySelected].name == '中国') {
+                    this.$Notice.open({
+                        title: this.$data.globalData[this.countrySelected].name + '疫情实况',
+                        desc: '全国确诊：' + this.$data.globalData[this.countrySelected].total.confirm + '，\
+                            较昨日新增：' + (this.$data.globalData[this.countrySelected].total.confirm - (this.$data.globalData[this.countrySelected].total.confirm - this.$data.globalData[this.countrySelected].today.confirm)) + '\
+                            <br>疑似病例：' + this.$data.chinaTotal.suspect + '，\
+                            治愈人数：' + this.$data.chinaTotal.heal + '<br>死亡人数：' + this.$data.chinaTotal.dead,
+                        duration: 0
+                    });
+                } else {
+                    this.$Notice.open({
+                        title: this.$data.globalData[this.countrySelected].name + '疫情实况',
+                        desc: '全国确诊：' + this.$data.globalData[this.countrySelected].total.confirm + '，\
+                            较昨日新增：' + (this.$data.globalData[this.countrySelected].total.confirm - (this.$data.globalData[this.countrySelected].total.confirm - this.$data.globalData[this.countrySelected].today.confirm)),
+                        duration: 0
+                    });
+                }
+                this.$data.provinceData = this.$data.globalData[this.countrySelected].children;
+                this.$data.cityData = [];
+                this.provinceSelected = null;
+                this.citySelected = null;
+            },
+            pullProvinceDetail () { //省级数据抽取
+                this.$data.cityData = [];
+                if (this.provinceSelected == 1) {
+                    let cities = this.$data.globalData[this.countrySelected].children[this.provinceSelected].children;
+                    cities.forEach ((v,k) => {
+                        this.$data.cityData.push(v);
+                    });
+                } else {
+                    this.provinceSelected.forEach((v,k) => {
+                        let cities = this.$data.globalData[this.countrySelected].children[v].children;
+                        cities.forEach ((v,k) => {
+                            this.$data.cityData.push(v);
+                        });
+                    });
+                }
+            },
+            pullCityDetail () { //市级数据抽取
+                this.$data.nCoV_Cards = [];
+                this.citySelected.forEach((v,k) => {
+                    this.$data.cityData.forEach((_v,_k) => {
+                        if (_v.name == v) this.$data.nCoV_Cards.push(_v);
+                    });
                 });
             }
         }
