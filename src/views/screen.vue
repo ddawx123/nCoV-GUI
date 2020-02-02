@@ -10,8 +10,7 @@
 </style>
 <template>
     <div class="screen">
-        <h2 style="text-align: center">新型冠状病毒（2019-nCoV）发展势态数据实况监控中心</h2>
-        <Divider dashed />
+        <h5 style="font-size: 13px; font-weight: bold; text-align: center">新型冠状病毒（2019-nCoV）发展势态数据实况监控中心</h5>
         <Alert style="font-size: 10px; padding: unset" type="error">中国疫情实况</Alert>
         <Row>
             <Alert style="float: left; font-size: 10px; padding: unset; width: 25%" type="error">确诊{{chinaTotal.confirm}}例</Alert>
@@ -21,32 +20,32 @@
         </Row>
         <Row>
             <Col span="8">
-                <Select v-model="countrySelected" filterable @on-change="pullCountryDetail">
+                <Select v-model="countrySelected" filterable @on-change="pullCountryDetail" placeholder="国家" not-found-text="请等待数据请求结束" size="large">
                     <Option v-for="(v,k,i) in globalData" :value="k" :key="i">{{ v.name }}</Option>
                 </Select>
             </Col>
             <Col span="8">
-                <Select v-model="provinceSelected" filterable multiple @on-change="pullProvinceDetail">
+                <Select v-model="provinceSelected" multiple @on-change="pullProvinceDetail" :max-tag-count="0" placeholder="省/直辖市/特区" not-found-text="仅当国家选为中国时支持此选项" size="large">
                     <Option v-for="(v,k,i) in provinceData" :value="k" :key="i">{{ v.name }}</Option>
                 </Select>
             </Col>
             <Col span="8">
-                <Select v-model="citySelected" filterable multiple @on-change="pullCityDetail">
+                <Select v-model="citySelected" multiple @on-change="pullCityDetail" :max-tag-count="0" placeholder="地级市" not-found-text="请先选择对应省级行政区划" size="large">
                     <Option v-for="(v,k,i) in cityData" :value="v.name" :key="i">{{ v.name }}</Option>
                 </Select>
             </Col>
         </Row>
         <Divider dashed />
         <Row>
-            <Col v-for="(v,k,i) in nCoV_Cards" :key="i" span="8">
+            <Col v-for="(v,k,i) in nCoV_Cards" :key="i" span="12">
                 <Card>
-                    <p slot="title">{{ v.name }} 实时疫情信息</p>
-                    <p>累计确诊：<span style="color: #f00; font-size: 18px; font-weight: bold">{{ v.total.confirm }}</span>例 较昨日新增：<span style="color: #f00; font-size: 18px; font-weight: bold">{{ v.total.confirm - (v.total.confirm - v.today.confirm) }}</span>例</p>
-                    <p>已治愈：<span style="color: #0b0; font-size: 18px; font-weight: bold">{{ v.total.heal }}</span>例 死亡：<span style="color: #00f; font-size: 18px; font-weight: bold">{{ v.total.dead }}</span>例</p>
+                    <p slot="title">{{ v.name }}</p>
+                    <p>累计确诊：<span style="color: #f00; font-size: 18px; font-weight: bold">{{ v.total.confirm }}</span>例<br>较昨日新增：<span style="color: #f00; font-size: 18px; font-weight: bold">{{ v.total.confirm - (v.total.confirm - v.today.confirm) }}</span>例</p>
+                    <p>已治愈：<span style="color: #0b0; font-size: 18px; font-weight: bold">{{ v.total.heal }}</span>例<br>死亡：<span style="color: #00f; font-size: 18px; font-weight: bold">{{ v.total.dead }}</span>例</p>
                 </Card>
             </Col>
         </Row>
-        <!--<Table :columns="columns_ncov" :data="data_ncov" :loading="loading"></Table>-->
+        <h5 style="font-weight: inherit">温馨提示：7:00-10:00为更新高峰，数据如有滞后请在此时段后查询</h5>
         <Divider />
         <h5 style="text-align: center">叮云科技数据墙 提供技术支持</h5>
     </div>
